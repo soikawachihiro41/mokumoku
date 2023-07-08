@@ -1,4 +1,4 @@
-<%= form_with model: event do |f| %>
+<%= form_with model: @event do |f| %>
   <%#= render 'shared/error_messages', object: f.object %>
   <div class="mb-3">
     <%= f.label :title %>
@@ -8,6 +8,12 @@
     <%= f.label :content %>
     <%= f.text_area :content, class: 'form-control', rows: 10 %>
   </div>
+  <% if current_user.woman? %>
+    <div class="mb-3">
+      <%= f.label :only_woman, 'Only Woman' %>
+      <%= f.check_box :only_woman %>
+    </div>
+  <% end %>
   <div class="mb-3">
     <%= f.label :held_at %>
     <%= f.datetime_field :held_at, class: 'form-control' %>
