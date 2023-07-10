@@ -59,12 +59,12 @@
         </div>
         <div class="card-body">
           <div class="d-flex align-items-center gap-3 mb-3">
-            <%= image_tag @event.user.decorate.avatar, class: 'rounded-circle avatar-lg' %>
+            <%= image_tag @event.user&.decorate.avatar, class: 'rounded-circle avatar-lg' %>
             <%= @event.user.name %>
           </div>
           <div class="p-3 bg-light">
             イベント数 
-            <%= @event.user.events.size %> 
+            <%= @event.user&.events&.size %> 
             回
           </div>
         </div>
@@ -87,8 +87,8 @@
           <hr />
           <div class="text-center">
           <% if logged_in? %>
-            <% if !@event.only_woman? || (current_user.woman? && @event.only_woman?) %>
-              <% if !current_user.owner?(@event) %>
+            <% if @event.accessible_by?(current_user) %>
+              <% unless current_user.owner?(@event) %>
                 <% if current_user.attend?(@event) %>
                   <%= link_to 'キャンセルする', event_attendance_url(@event), class: 'btn btn-primary', method: :delete, data: { confirm: 'キャンセルします' } %>
                 <% else %>

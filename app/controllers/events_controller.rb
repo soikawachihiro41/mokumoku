@@ -43,7 +43,7 @@ class EventsController < ApplicationController
 
   def show
     @event = Event.find(params[:id])
-    if @event.only_woman? && !current_user&.woman?
+    unless @event.accessible_by?(current_user)
       redirect_to events_path, alert: 'このイベントは女性限定です。'
     else
       @can_join = !@event.only_woman? || (current_user&.woman? && @event.only_woman?)

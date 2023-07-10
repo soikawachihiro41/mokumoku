@@ -27,9 +27,14 @@ class Event < ApplicationRecord
   def future?
     !past?
   end
+
   def only_woman_event
     if only_woman && user.man?
       errors.add(:only_woman, 'は男性には設定できません')
     end
+  end
+
+  def accessible_by?(user)
+    !only_woman? || (user&.woman? && only_woman?)
   end
 end
