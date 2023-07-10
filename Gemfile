@@ -47,10 +47,13 @@ group :development, :test do
   gem 'rb-readline'
   gem 'rspec-rails'
   gem 'rails-erd'
+  gem 'rails-i18n'
+end
+
+group :test do
   gem 'capybara', '~> 3.23'
   gem 'selenium-webdriver', '4.9.0'
   gem 'webdrivers'
-  gem 'rails-i18n'
 end
 
 group :development do
