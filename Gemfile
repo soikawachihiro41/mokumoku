@@ -46,6 +46,14 @@ group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'rb-readline'
   gem 'rspec-rails'
+  gem 'rails-erd'
+  gem 'rails-i18n'
+end
+
+group :test do
+  gem 'capybara', '~> 3.23'
+  gem 'selenium-webdriver', '4.9.0'
+  gem 'webdrivers'
 end
 
 group :development do
@@ -69,3 +77,4 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+gem 'nokogiri', '1.12.5'

@@ -1,8 +1,17 @@
 ja:
+  activerecord:
+    attributes:
+      user:
+        gender: "性別"
   enums:
+    user:
+      gender:
+        other: "その他"
+        woman: "女性"
+        man: "男性"
     notification_timing:
       timing:
-        created_event: イベントが作成された時
-        commented_to_event: あなたのイベントにコメントがあった時
-        attended_to_event: あなたのイベントに参加申し込みがあった時
-        liked_event: あなたのイベントにいいねがついた時
+        created_event: "イベントが作成された時"
+        commented_to_event: "あなたのイベントにコメントがあった時"
+        attended_to_event: "あなたのイベントに参加申し込みがあった時"
+        liked_event: "あなたのイベントにいいねがついた時"
