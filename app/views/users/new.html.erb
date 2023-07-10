@@ -20,6 +20,10 @@
               <%= f.text_field :name, class: 'form-control' %>
             </div>
             <div class="mb-3">
+              <%= f.label :gender, "Gender" %>
+              <%= f.select :gender, User.genders.keys.map { |w| [I18n.t("enums.user.gender.#{w}"), w] }, {}, class: 'form-control' %>
+            </div>
+            <div class="mb-3">
               <%= f.label :email %>
               <%= f.email_field :email, class: 'form-control' %>
             </div>

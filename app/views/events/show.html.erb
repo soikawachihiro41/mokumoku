@@ -13,6 +13,9 @@
             </div>
             <h1>
               <%= @event.title %>
+              <% if @event.only_woman? %>
+                <span class="badge bg-secondary">女性限定</span>
+              <% end %>
             </h1>
             <% if logged_in? %>
               <div class="ms-auto">
@@ -56,12 +59,12 @@
         </div>
         <div class="card-body">
           <div class="d-flex align-items-center gap-3 mb-3">
-            <%= image_tag @event.user.decorate.avatar, class: 'rounded-circle avatar-lg' %>
+            <%= image_tag @event.user&.decorate.avatar, class: 'rounded-circle avatar-lg' %>
             <%= @event.user.name %>
           </div>
           <div class="p-3 bg-light">
-            イベント数
-            <%= @event.user.events.size %>
+            イベント数 
+            <%= @event.user&.events&.size %> 
             回
           </div>
         </div>
@@ -83,26 +86,22 @@
           </h4>
           <hr />
           <div class="text-center">
-            <% if logged_in? %>
-              <% if !current_user.owner?(@event) %>
+          <% if logged_in? %>
+            <% if @event.accessible_by?(current_user) %>
+              <% unless current_user.owner?(@event) %>
                 <% if current_user.attend?(@event) %>
-                  <%= link_to 'キャンセルする',
-                              event_attendance_url(@event),
-                              class: 'btn btn-primary',
-                              method: :delete,
-                              data: { confirm: 'キャンセルします' }
-                  %>
+                  <%= link_to 'キャンセルする', event_attendance_url(@event), class: 'btn btn-primary', method: :delete, data: { confirm: 'キャンセルします' } %>
                 <% else %>
-                  <%= link_to 'このもくもく会に参加する',
-                              event_attendance_url(@event),
-                              class: 'btn btn-primary',
-                              method: :post,
-                              data: { confirm: '申し込みます' }
-                  %>
+                  <%= link_to 'このもくもく会に参加する', event_attendance_url(@event), class: 'btn btn-primary', method: :post, data: { confirm: '申し込みます' } %>
                 <% end %>
               <% end %>
+            <% else %>
+              <% if @event.only_woman? %>
+                <p>女性限定イベントに参加できません。</p>
+              <% end %>
             <% end %>
-          </div>
+          <% end %>
+        </div>
         </div>
       </div>
       <div class="card mb-3">
@@ -111,12 +110,11 @@
           参加者（<%= @event.attendees.size %>人）
         </div>
         <div class="card-body">
-           <ul class="list-unstyled">
-             <%= render partial: 'events/attendee', collection: @event.attendees %>
-           </ul>
+          <ul class="list-unstyled">
+            <%= render partial: 'events/attendee', collection: @event.attendees %>
+          </ul>
         </div>
       </div>
-
       <div class="card">
         <div class="card-header">
           <i class="bi bi-chat"></i>
@@ -125,7 +123,6 @@
         <div class="card-body">
           <ul class="list-unstyled">
             <%= render partial: 'events/comment', collection: @event.comments %>
-
           </ul>
           <%= form_with model: [@event, @comment || Comment.new] do |f| %>
             <div class="mb-3">
