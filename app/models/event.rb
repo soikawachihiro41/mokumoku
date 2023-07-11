@@ -10,7 +10,7 @@ class Event < ApplicationRecord
   has_many :attendees, through: :attendances, class_name: 'User', source: :user
   has_many :bookmarks, dependent: :destroy
   has_one_attached :thumbnail
-
+  validate :only_woman_event
   scope :future, -> { where('held_at > ?', Time.current) }
   scope :past, -> { where('held_at <= ?', Time.current) }
 
@@ -26,5 +26,15 @@ class Event < ApplicationRecord
 
   def future?
     !past?
+  end
+
+  def only_woman_event
+    if only_woman? && user.man?
+      errors.add(:only_woman, 'は男性には設定できません')
+    end
+  end
+
+  def can_join?(user)
+    !only_woman? || (user&.woman? && only_woman?)
   end
 end
