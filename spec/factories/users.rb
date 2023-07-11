@@ -10,5 +10,9 @@ FactoryBot.define do
     trait :woman_user do
       gender { :woman }
     end
+
+    trait :man_user do
+      gender { :man }
+    end
   end
 end

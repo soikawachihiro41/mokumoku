@@ -29,12 +29,12 @@ class Event < ApplicationRecord
   end
 
   def only_woman_event
-    if only_woman && user.man?
+    if only_woman? && user.man?
       errors.add(:only_woman, 'は男性には設定できません')
     end
   end
 
-  def accessible_by?(user)
+  def can_join?(user)
     !only_woman? || (user&.woman? && only_woman?)
   end
 end

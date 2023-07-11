@@ -29,9 +29,9 @@ class EventsController < ApplicationController
 
   def create
     @event = current_user.events.build(event_params)
-    if @event.only_woman? && !current_user.woman?
-      redirect_to new_event_path, alert: '女性限定イベントを作成する権限がありません。'
-    elsif @event.save
+    # ガード節を追加
+    return redirect_to new_event_path, alert: '女性限定イベントを作成する権限がありません。' if @event.only_woman? && !current_user.woman?
+    if @event.save
       User.all.find_each do |user|
         NotificationFacade.created_event(@event, user)
       end
@@ -40,13 +40,13 @@ class EventsController < ApplicationController
       render :new
     end
   end
-
+  
   def show
     @event = Event.find(params[:id])
-    unless @event.accessible_by?(current_user)
+    if @event.only_woman? && !current_user&.woman?
       redirect_to events_path, alert: 'このイベントは女性限定です。'
     else
-      @can_join = !@event.only_woman? || (current_user&.woman? && @event.only_woman?)
+      @can_join = @event.can_join?(current_user)
     end
   end
 
@@ -56,14 +56,15 @@ class EventsController < ApplicationController
 
   def update
     @event = current_user.events.find(params[:id])
-    if @event.only_woman? && !current_user.woman?
-      redirect_to edit_event_path(@event), alert: '女性限定イベントを更新する権限がありません。'
-    elsif @event.update(event_params)
+    # ガード節を追加
+    return redirect_to edit_event_path(@event), alert: '女性限定イベントを更新する権限がありません。' if @event.only_woman? && !current_user.woman?
+    if @event.update(event_params)
       redirect_to event_path(@event)
     else
       render :edit
     end
   end
+  
 
   private
 
